@@ -60,7 +60,7 @@ accuracies.std() # standart deviation (отклонение точностей) 
 # и для каждого типа еще можно варьировать параметры и найти лучший набор
 from sklearn.model_selection import GridSearchCV
 parameters = [ # определяем список параметров для пробы в SVC модели
-  {
+  { # dictionary
     'C': [1, 10, 100, 1000], # насколько сильно штрафуем функцию по ошибке?
     'kernel': ['linear']
   },{
@@ -68,7 +68,18 @@ parameters = [ # определяем список параметров для �
     'kernel': ['rbf'],
     'gamma': [0.5, 0.1, 0.01, 0.001]
   }
-]   # dictionary
+]
+grid_search = GridSearchCV(
+  estimator = classifier,
+  param_grid = parameters,
+  scoring = 'accuracy',
+  cv = 10 # алгортм импользует cross_val_score для изменения точности
+  #,n_jobs = -1 # если большие данные, то можно использовать все ядра проца
+)
+
+grid_search = grid_search.fit(X_train, y_train) # запускаем Grid Search
+best_accuracy = grid_search.best_score_ # вернет самый лучший вариант 90%
+best_parameters = grid_search.best_params_ # самые лучшие параметры вернет
 
 # Visualising the Training set results
 from matplotlib.colors import ListedColormap
